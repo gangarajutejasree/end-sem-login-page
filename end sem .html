@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#155eef">
+  <title>Login System | Frontend Laboratory</title>
+  <style>
+    :root {
+      --blue: #155eef;
+      --blue-dark: #1048bd;
+      --blue-soft: #eef4ff;
+      --ink: #172033;
+      --muted: #667085;
+      --border: #d8deea;
+      --success: #16803d;
+      --error: #c62828;
+      --white: #fff;
+      --shadow: 0 18px 50px rgba(16, 40, 90, .10);
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--ink);
+      background: linear-gradient(135deg, #f5f8ff 0%, #edf3ff 55%, #f8fbff 100%);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .site-header {
+      width: 100%;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(16, 40, 90, .04);
+    }
+    .nav-wrap {
+      max-width: 1120px;
+      min-height: 70px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      color: white;
+      background: var(--blue);
+      font-size: 20px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 10px; }
+    .nav-link {
+      padding: 9px 13px;
+      border-radius: 8px;
+      color: #344054;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+    }
+    .nav-link:hover { color: var(--blue); background: var(--blue-soft); }
+
+    main {
+      flex: 1;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      padding: 46px 18px;
+    }
+    .auth-card, .dashboard-card {
+      width: min(100%, 460px);
+      padding: 34px;
+      border: 1px solid #e1e7f0;
+      border-radius: 18px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+    .card-heading { margin-bottom: 26px; text-align: center; }
+    .card-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 15px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      color: var(--blue);
+      background: var(--blue-soft);
+      font-size: 25px;
+    }
+    h1 { margin: 0 0 8px; font-size: 27px; letter-spacing: -.5px; }
+    .subtitle { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .form-group { margin-bottom: 18px; }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #344054;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .input-wrap { position: relative; }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      min-height: 47px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      background: #fff;
+      color: #000;
+      caret-color: #000;
+      font: inherit;
+      font-size: 15px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input::placeholder { color: #98a2b3; opacity: 1; }
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(21, 94, 239, .12);
+    }
+    .password-input { padding-right: 76px !important; }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      padding: 6px 7px;
+      border: 0;
+      border-radius: 6px;
+      color: var(--blue);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .toggle-password:hover { background: var(--blue-soft); }
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 2px 0 21px;
+    }
+    .remember {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      color: #475467;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+    input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--blue); cursor: pointer; }
+    .primary-btn {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 9px;
+      color: #fff;
+      background: var(--blue);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+    .primary-btn:hover {
+      background: var(--blue-dark);
+      box-shadow: 0 7px 16px rgba(21, 94, 239, .2);
+      transform: translateY(-1px);
+    }
+    .primary-btn:active { transform: translateY(0); }
+    .form-message {
+      min-height: 20px;
+      margin: 14px 0 0;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    .form-message.success { color: var(--success); }
+    .form-message.error { color: var(--error); }
+    .switch-text {
+      margin: 22px 0 0;
+      padding-top: 19px;
+      border-top: 1px solid #e8edf4;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+    .text-link {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .text-link:hover { text-decoration: underline; }
+
+    .dashboard-card { width: min(100%, 600px); }
+    .dashboard-top { text-align: center; padding-bottom: 22px; border-bottom: 1px solid #e8edf4; }
+    .success-icon {
+      width: 58px; height: 58px; margin: 0 auto 14px;
+      display: grid; place-items: center; border-radius: 50%;
+      color: var(--success); background: #eaf7ee; font-size: 29px;
+    }
+    .dashboard-top h1 { font-size: 26px; }
+    .dashboard-top p { color: var(--success); font-size: 14px; font-weight: 700; }
+    .details { margin: 22px 0; }
+    .detail-row {
+      display: flex; justify-content: space-between; gap: 18px;
+      padding: 15px 2px; border-bottom: 1px solid #edf0f5; font-size: 14px;
+    }
+    .detail-label { color: var(--muted); }
+    .detail-value { color: var(--ink); font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+    .status-pill {
+      display: inline-block; padding: 5px 10px; border-radius: 20px;
+      color: var(--success); background: #eaf7ee; font-size: 12px;
+    }
+    .site-footer {
+      padding: 19px 15px;
+      border-top: 1px solid var(--border);
+      color: #667085;
+      background: rgba(255,255,255,.85);
+      text-align: center;
+      font-size: 12px;
+    }
+    [hidden] { display: none !important; }
+
+    @media (max-width: 600px) {
+      .nav-wrap { min-height: 62px; padding: 10px 15px; }
+      .brand { font-size: 14px; }
+      .brand-mark { width: 34px; height: 34px; }
+      .nav-link { padding: 8px 9px; font-size: 13px; }
+      main { padding: 28px 14px; }
+      .auth-card, .dashboard-card { padding: 26px 20px; border-radius: 14px; }
+      h1 { font-size: 24px; }
+      .detail-row { align-items: flex-start; }
+    }
+    @media (max-width: 360px) {
+      .brand span:last-child { max-width: 145px; line-height: 1.2; }
+      .nav-links { gap: 0; }
+      .nav-link { padding: 7px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-wrap" aria-label="Main navigation">
+      <a class="brand" href="#" id="brandHome">
+        <span class="brand-mark" aria-hidden="true">✓</span>
+        <span>SecureLogin Demo</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="#login" id="navLogin">Login</a>
+        <a class="nav-link" href="#register" id="navRegister">Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="auth-card" id="loginView" aria-labelledby="loginHeading">
+      <div class="card-heading">
+        <div class="card-icon" aria-hidden="true">↪</div>
+        <h1 id="loginHeading">Welcome back</h1>
+        <p class="subtitle">Enter your account details to sign in.</p>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginEmail">Email address</label>
+          <input id="loginEmail" name="email" type="email" placeholder="you@example.com"
+                 autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="input-wrap">
+            <input id="loginPassword" name="password" class="password-input" type="password"
+                   placeholder="Enter your password" autocomplete="current-password" required>
+            <button class="toggle-password" type="button" data-toggle="loginPassword"
+                    aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <div class="form-options">
+          <label class="remember" for="rememberMe">
+            <input id="rememberMe" type="checkbox"> Remember me
+          </label>
+        </div>
+        <button class="primary-btn" type="submit">Login</button>
+        <p class="form-message" id="loginMessage" role="status" aria-live="polite"></p>
+      </form>
+      <p class="switch-text">Don't have an account? <a class="text-link" href="#register" id="toRegister">Register</a></p>
+    </section>
+
+    <section class="auth-card" id="registerView" aria-labelledby="registerHeading" hidden>
+      <div class="card-heading">
+        <div class="card-icon" aria-hidden="true">＋</div>
+        <h1 id="registerHeading">Create an account</h1>
+        <p class="subtitle">Register with your name, email and password.</p>
+      </div>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label for="registerName">Full name</label>
+          <input id="registerName" name="name" type="text" placeholder="Enter your full name"
+                 autocomplete="name" required>
+        </div>
+        <div class="form-group">
+          <label for="registerEmail">Email address</label>
+          <input id="registerEmail" name="email" type="email" placeholder="you@example.com"
+                 autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="registerPassword">Password</label>
+          <div class="input-wrap">
+            <input id="registerPassword" name="password" class="password-input" type="password"
+                   placeholder="At least 6 characters" autocomplete="new-password" required>
+            <button class="toggle-password" type="button" data-toggle="registerPassword"
+                    aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm password</label>
+          <div class="input-wrap">
+            <input id="confirmPassword" name="confirmPassword" class="password-input" type="password"
+                   placeholder="Re-enter your password" autocomplete="new-password" required>
+            <button class="toggle-password" type="button" data-toggle="confirmPassword"
+                    aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <button class="primary-btn" type="submit">Register</button>
+        <p class="form-message" id="registerMessage" role="status" aria-live="polite"></p>
+      </form>
+      <p class="switch-text">Already have an account? <a class="text-link" href="#login" id="toLogin">Login</a></p>
+    </section>
+
+    <section class="dashboard-card" id="dashboardView" aria-labelledby="dashboardHeading" hidden>
+      <div class="dashboard-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <h1 id="dashboardHeading">Login successfully!</h1>
+        <p>Welcome to your dashboard.</p>
+      </div>
+      <div class="details">
+        <div class="detail-row">
+          <span class="detail-label">Welcome</span>
+          <span class="detail-value" id="dashboardName"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Registered email</span>
+          <span class="detail-value" id="dashboardEmail"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Login status</span>
+          <span class="detail-value"><span class="status-pill">Logged in</span></span>
+        </div>
+      </div>
+      <button class="primary-btn" id="logoutButton" type="button">Logout</button>
+      <p class="form-message" id="dashboardMessage" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Frontend Development – End Semester Laboratory Project
+  </footer>
+
+  <script>
+    "use strict";
+
+    const USERS_KEY = "frontendLabUsers";
+    const SESSION_KEY = "frontendLabSession";
+
+    const loginView = document.getElementById("loginView");
+    const registerView = document.getElementById("registerView");
+    const dashboardView = document.getElementById("dashboardView");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const loginMessage = document.getElementById("loginMessage");
+    const registerMessage = document.getElementById("registerMessage");
+
+    function showMessage(element, message, type) {
+      element.textContent = message;
+      element.className = "form-message " + (type || "");
+    }
+
+    function clearMessage(element) {
+      showMessage(element, "", "");
+    }
+
+    function getUsers() {
+      const savedUsers = localStorage.getItem(USERS_KEY);
+      if (savedUsers === null) return [];
+      const parsedUsers = JSON.parse(savedUsers);
+      if (!Array.isArray(parsedUsers)) {
+        throw new Error("Stored account data is not in the expected format.");
+      }
+      return parsedUsers;
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+
+    function showView(viewName) {
+      loginView.hidden = viewName !== "login";
+      registerView.hidden = viewName !== "register";
+      dashboardView.hidden = viewName !== "dashboard";
+      document.getElementById("navLogin").hidden = viewName === "dashboard";
+      document.getElementById("navRegister").hidden = viewName === "dashboard";
+
+      if (viewName === "login") {
+        history.replaceState(null, "", "#login");
+        document.getElementById("loginEmail").focus();
+      } else if (viewName === "register") {
+        history.replaceState(null, "", "#register");
+        document.getElementById("registerName").focus();
+      } else {
+        history.replaceState(null, "", "#dashboard");
+      }
+    }
+
+    function getSession() {
+      try {
+        const persistentSession = localStorage.getItem(SESSION_KEY);
+        const temporarySession = sessionStorage.getItem(SESSION_KEY);
+        const rawSession = persistentSession || temporarySession;
+        return rawSession ? JSON.parse(rawSession) : null;
+      } catch (error) {
+        console.error("Unable to read login session:", error);
+        return null;
+      }
+    }
+
+    function saveSession(user, remember) {
+      const session = JSON.stringify({ email: user.email });
+      // Keep only one active session location so Remember me has clear behaviour.
+      localStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_KEY);
+      if (remember) {
+        localStorage.setItem(SESSION_KEY, session);
+      } else {
+        sessionStorage.setItem(SESSION_KEY, session);
+      }
+    }
+
+    function openDashboard(user) {
+      document.getElementById("dashboardName").textContent = user.name;
+      document.getElementById("dashboardEmail").textContent = user.email;
+      showView("dashboard");
+    }
+
+    function restoreSession() {
+      try {
+        const session = getSession();
+        if (!session || !session.email) {
+          showView("login");
+          return;
+        }
+        const user = getUsers().find(account => account.email === session.email);
+        if (user) {
+          openDashboard(user);
+        } else {
+          localStorage.removeItem(SESSION_KEY);
+          sessionStorage.removeItem(SESSION_KEY);
+          showView("login");
+        }
+      } catch (error) {
+        console.error("Unable to restore account session:", error);
+        showMessage(loginMessage, "Unable to read saved account data. Please register again.", "error");
+        showView("login");
+      }
+    }
+
+    function validEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Login: verify the entered email and password against saved accounts.
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      clearMessage(loginMessage);
+
+      const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const password = document.getElementById("loginPassword").value;
+
+      if (!email || !password) {
+        showMessage(loginMessage, "Please fill in all fields!", "error");
+        return;
+      }
+
+      try {
+        const user = getUsers().find(account =>
+          account.email === email && account.password === password
+        );
+
+        if (!user) {
+          showMessage(loginMessage, "Invalid email or password!", "error");
+          return;
+        }
+
+        saveSession(user, document.getElementById("rememberMe").checked);
+        loginForm.reset();
+        openDashboard(user);
+      } catch (error) {
+        console.error("Login storage error:", error);
+        showMessage(loginMessage, "Unable to access saved accounts. Check browser storage settings.", "error");
+      }
+    });
+
+    // Registration: validate, prevent duplicates, then save all accounts as JSON.
+    registerForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      clearMessage(registerMessage);
+
+      const name = document.getElementById("registerName").value.trim();
+      const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+      const password = document.getElementById("registerPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (!name || !email || !password || !confirmPassword) {
+        showMessage(registerMessage, "Please fill in all fields!", "error");
+        return;
+      }
+      if (!validEmail(email)) {
+        showMessage(registerMessage, "Invalid email address!", "error");
+        return;
+      }
+      if (password.length < 6) {
+        showMessage(registerMessage, "Password must contain at least 6 characters!", "error");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showMessage(registerMessage, "Passwords do not match!", "error");
+        return;
+      }
+
+      try {
+        const users = getUsers();
+        if (users.some(user => user.email === email)) {
+          showMessage(registerMessage, "Email already registered!", "error");
+          return;
+        }
+
+        users.push({ name: name, email: email, password: password });
+        saveUsers(users);
+        registerForm.reset();
+        showMessage(registerMessage, "Registration successful!", "success");
+
+        // Show the success message briefly, then return to the login form.
+        window.setTimeout(function () {
+          clearMessage(registerMessage);
+          showView("login");
+          document.getElementById("loginEmail").value = email;
+          showMessage(loginMessage, "Registration successful! Please log in.", "success");
+        }, 1100);
+      } catch (error) {
+        console.error("Registration storage error:", error);
+        showMessage(registerMessage, "Unable to save account. Browser storage may be unavailable or full.", "error");
+      }
+    });
+
+    // Show/Hide password controls.
+    document.querySelectorAll("[data-toggle]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const input = document.getElementById(button.dataset.toggle);
+        const shouldShow = input.type === "password";
+        input.type = shouldShow ? "text" : "password";
+        button.textContent = shouldShow ? "Hide" : "Show";
+        button.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+        button.setAttribute("aria-pressed", String(shouldShow));
+      });
+    });
+
+    // Navigation links.
+    document.getElementById("navLogin").addEventListener("click", function (event) {
+      event.preventDefault();
+      clearMessage(loginMessage);
+      showView("login");
+    });
+    document.getElementById("navRegister").addEventListener("click", function (event) {
+      event.preventDefault();
+      clearMessage(registerMessage);
+      showView("register");
+    });
+    document.getElementById("toRegister").addEventListener("click", function (event) {
+      event.preventDefault();
+      clearMessage(registerMessage);
+      showView("register");
+    });
+    document.getElementById("toLogin").addEventListener("click", function (event) {
+      event.preventDefault();
+      clearMessage(loginMessage);
+      showView("login");
+    });
+    document.getElementById("brandHome").addEventListener("click", function (event) {
+      event.preventDefault();
+      const session = getSession();
+      if (session) restoreSession();
+      else showView("login");
+    });
+
+    // Logout removes both persistent and tab-only session data; accounts remain saved.
+    document.getElementById("logoutButton").addEventListener("click", function () {
+      try {
+        localStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_KEY);
+        loginForm.reset();
+        showView("login");
+        showMessage(loginMessage, "You have been logged out successfully.", "success");
+      } catch (error) {
+        console.error("Logout storage error:", error);
+        showMessage(document.getElementById("dashboardMessage"),
+          "Could not clear the session. Check browser storage settings.", "error");
+      }
+    });
+
+    // If browser storage is disabled, show a useful message instead of a broken page.
+    try {
+      restoreSession();
+    } catch (error) {
+      console.error("Application initialization error:", error);
+      showView("login");
+      showMessage(loginMessage, "Browser storage is unavailable. Enable localStorage to use this project.", "error");
+    }
+  </script>
+</body>
+</html>
